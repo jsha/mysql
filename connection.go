@@ -645,9 +645,3 @@ func (mc *mysqlConn) ResetSession(ctx context.Context) error {
 	mc.reset = true
 	return nil
 }
-
-// IsValid implements driver.Validator interface
-// (From Go 1.15)
-func (mc *mysqlConn) IsValid() bool {
-	return !mc.closed.IsSet()
-}
