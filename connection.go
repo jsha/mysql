@@ -13,6 +13,7 @@ import (
 	"database/sql"
 	"database/sql/driver"
 	"encoding/json"
+	"fmt"
 	"io"
 	"net"
 	"strconv"
@@ -104,6 +105,7 @@ func (mc *mysqlConn) Begin() (driver.Tx, error) {
 }
 
 func (mc *mysqlConn) begin(readOnly bool) (driver.Tx, error) {
+	errLog.Print(fmt.Sprintf("in mysqlConn.begin %s", readOnly))
 	if mc.closed.IsSet() {
 		errLog.Print(ErrInvalidConn)
 		return nil, driver.ErrBadConn
@@ -433,6 +435,7 @@ func (mc *mysqlConn) getSystemVar(name string) ([]byte, error) {
 // finish is called when the query has canceled.
 func (mc *mysqlConn) cancel(err error) {
 	mc.canceled.Set(err)
+	errLog.Print(fmt.Sprintf("canceling a request and running mc.cleanup(): %s", err))
 	mc.cleanup()
 }
 
